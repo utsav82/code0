@@ -13,6 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 8080;
 app.use(express.static(path.join(__dirname, "./frontend", "out")));
 
+app.get("/api", (req, res) => {
+  res.send("Hellow world");
+});
+
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "./frontend", "out", "index.html"));
 });
