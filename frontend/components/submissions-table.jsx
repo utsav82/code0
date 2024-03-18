@@ -1,3 +1,4 @@
+"use client"
 import {
     Table,
     TableBody,
@@ -7,7 +8,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import Link from "next/link"
 import {
     Dialog,
     DialogContent,
@@ -17,13 +17,24 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import SubmissionDetails from "./submission-details";
+import React, { useState, useEffect } from 'react';
 
 function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
     return date.toLocaleString();
 }
 
-const Submissions = ({ data }) => {
+const Submissions = () => {
+
+    const [codeSnippets, setCodeSnippets] = useState([]);
+
+    useEffect(() => {
+        fetch("/api/code-snippets")
+            .then((response) => response.json())
+            .then((data) => setCodeSnippets(data))
+            .catch((error) => console.error(error));
+    }, []);
+
     return (
         <Table>
             <TableHeader>
@@ -35,7 +46,7 @@ const Submissions = ({ data }) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {data.map((item) => (
+                {codeSnippets.map((item) => (
                     <TableRow key={item.id}>
                         <TableCell>
                             <Dialog>

@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Check } from "lucide-react";
-const SubmissionDetails = ({ username, language, code, stdin, output }) => {
+const SubmissionDetails = ({ username, language, source_code, stdin, output }) => {
     return (
         <div className="container flex flex-col py-6">
             <div className="flex flex-col sm:flex-row gap-6">
@@ -13,7 +13,7 @@ const SubmissionDetails = ({ username, language, code, stdin, output }) => {
                         id="code"
                         placeholder="Input your source code here"
                         className="min-h-[500px] resize-none"
-                        value={code}
+                        value={source_code}
                         disabled
                         readOnly
                     />
@@ -51,7 +51,7 @@ const SubmissionDetails = ({ username, language, code, stdin, output }) => {
                         placeholder="Output"
                         className="flex-1 resize-none"
                         value={output}
-                        disabled 
+                        disabled
                         readOnly
                     />
 

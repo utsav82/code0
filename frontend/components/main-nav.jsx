@@ -17,13 +17,13 @@ export function MainNav() {
             <div className="flex items-center justify-center gap-3">
                 <nav className="flex gap-6">
                     <Link
-                        href="/"
+                        href="/submit"
                         className="font-medium text-sm"
                     >
                         Submit Code
                     </Link>
                     <Link
-                        href="/submissions"
+                        href="/"
                         className="font-medium text-sm"
                     >
                         Submissions

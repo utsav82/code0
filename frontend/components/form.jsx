@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +12,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-
+import { useToast } from "@/components/ui/use-toast"
 const languages = [
     {
         label: "Java",
@@ -32,20 +33,60 @@ const languages = [
 ];
 
 const Form = () => {
+    const router = useRouter();
+    const { toast } = useToast()
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('');
     const [username, setUsername] = useState('');
-    const [sourceCode, setSourceCode] = useState('');
-    const [input, setInput] = useState('');
+    const [source_code, setSourceCode] = useState('');
+    const [stdin, setInput] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Form validation
+        if (!username || !value || !source_code || !stdin) {
+            toast({
+                title: "Please fill in all fields",
+                description: "All fields are required.",
+            });
+            return;
+        }
+
         console.log("Form submitted:", {
             username,
             language: value,
-            sourceCode,
-            input
+            source_code,
+            stdin
         });
+
+        fetch('/api/code-snippets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username,
+                language: value,
+                source_code,
+                stdin,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Code snippet submitted:', data);
+                toast({
+                    title: "Code snippet submitted"
+                });
+                router.push("/");
+            })
+            .catch((error) => {
+                console.error('Error submitting code snippet:', error);
+                toast({
+                    title: "Uh oh! Something went wrong.",
+                    description: "There was a problem with your request.",
+                })
+            });
     };
 
     return (
@@ -58,7 +99,7 @@ const Form = () => {
                             id="code"
                             placeholder="Input your source code here"
                             className="min-h-[500px] resize-none"
-                            value={sourceCode}
+                            value={source_code}
                             onChange={(e) => setSourceCode(e.target.value)}
                         />
                     </div>
@@ -117,7 +158,7 @@ const Form = () => {
                             id="input"
                             placeholder="Standard Input"
                             className="flex-1 resize-none"
-                            value={input}
+                            value={stdin}
                             onChange={(e) => setInput(e.target.value)}
                         />
 

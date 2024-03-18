@@ -1,6 +1,5 @@
 import { Separator } from "@/components/ui/separator";
 import Submissions from "@/components/submissions-table";
-import { data } from "./data"
 
 export const metadata = {
   title: "Submissions",
@@ -14,7 +13,7 @@ const page = () => {
           <h2 className="text-lg font-semibold">Submissions</h2>
         </div>
         <Separator />
-        <Submissions data={data} />
+        <Submissions />
       </div>
     </>
   )

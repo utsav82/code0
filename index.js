@@ -1,11 +1,10 @@
 import express from "express";
-import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import path from "path";
+import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
+import codeSnippetController from "./controllers/codeSnippetController.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-dotenv.config();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,9 +12,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 8080;
 app.use(express.static(path.join(__dirname, "./frontend", "out")));
 
-app.get("/api", (req, res) => {
-  res.send("Hellow world");
-});
+app.get("/api/code-snippets", codeSnippetController.getAllCodeSnippets);
+app.post("/api/code-snippets", codeSnippetController.createCodeSnippet);
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "./frontend", "out", "index.html"));
