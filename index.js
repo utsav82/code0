@@ -5,6 +5,13 @@ import { fileURLToPath } from "url";
 import codeSnippetController from "./controllers/codeSnippetController.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+//enable cors
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
