@@ -14,7 +14,7 @@ const SubmissionDetails = ({ username, language, source_code, stdin, token }) =>
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`http://localhost:8080/api/code-snippets/${token}`);
+                const response = await fetch(`/api/code-snippets/${token}`);
                 const data = await response.json();
                 setOutput(data.output);
             } catch (error) {
