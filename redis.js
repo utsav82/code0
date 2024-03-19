@@ -1,17 +1,13 @@
 import redis from "redis";
 const client = redis.createClient({
-  socket: {
-    port: process.env.REDIS_PORT,
-    host: process.env.REDIS_HOST,
-  },
+  url: process.env.REDIS_URL,
 });
-
 (async () => {
   await client.connect();
 })();
 
 client.on("connect", () => {
-  console.log("Connected!");
+  console.log("Redis Connected!");
 });
 
 client.on("error", (err) => {
