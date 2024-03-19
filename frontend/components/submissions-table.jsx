@@ -5,7 +5,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import SubmissionDetails from "./submission-details";
 import { Button } from './ui/button';
-
+import { data } from './data';
 function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
     return date.toLocaleString();

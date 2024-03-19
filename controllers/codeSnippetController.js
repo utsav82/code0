@@ -77,7 +77,7 @@ const codeSnippetController = {
 
     try {
       const [codeSnippets] = await db.query(
-        "SELECT id, username, language, LEFT(source_code, 100) AS source_code, stdin, token, timestamp FROM code_snippets ORDER BY timestamp DESC LIMIT ?, ?",
+        "SELECT id, username, language, source_code, stdin, token, timestamp FROM code_snippets ORDER BY timestamp DESC LIMIT ?, ?",
         [offset, parseInt(pageSize)]
       );
       const [totalCount] = await db.query(

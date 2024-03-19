@@ -8,11 +8,11 @@ export function MainNav() {
                 <img
                     src="/logo.png"
                     alt="logo"
-                    className="w-10 md:w-10 mx-2 h-auto rounded-lg"
+                    className="w-8 md:w-10 mx-2 h-auto rounded-lg"
                     width={100}
                     height={100}
                 />
-                <span className="font-extrabold text-xl">TUF assignment</span>
+                <span className="font-extrabold sm:text-xl">TUF assignment</span>
             </Link>
             <div className="flex items-center justify-center gap-3">
                 <nav className="flex gap-6">
