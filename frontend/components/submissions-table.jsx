@@ -12,7 +12,7 @@ function formatTimestamp(timestamp) {
 }
 
 const Submissions = () => {
-    const [snippets, setSnippets] = useState([]);
+    const [snippets, setSnippets] = useState(data);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
