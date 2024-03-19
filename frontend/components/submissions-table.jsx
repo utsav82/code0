@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import SubmissionDetails from "./submission-details";
 import { Button } from './ui/button';
 import { data } from './data';
+import ClipLoader from "react-spinners/ClipLoader";
 function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
     return date.toLocaleString();
@@ -40,43 +41,51 @@ const Submissions = () => {
 
     return (
         <>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>ID</TableHead>
-                        <TableHead>Username</TableHead>
-                        <TableHead>Language</TableHead>
-                        <TableHead>Timestamp</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {snippets.map((item) => (
-                        <TableRow key={item.id}>
-                            <TableCell>
-                                <Dialog>
-                                    <DialogTrigger className="text-blue-300">{item.id}</DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>Submission {item.id}</DialogTitle>
-                                        </DialogHeader>
-                                        <SubmissionDetails {...item}></SubmissionDetails>
-                                    </DialogContent>
-                                </Dialog>
-                            </TableCell>
-                            <TableCell>{item.username}</TableCell>
-                            <TableCell>{item.language}</TableCell>
-                            <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            {currentPage <= totalPages && (
-                <div className="text-center my-4">
-                    <Button variant="outline" onClick={fetchNextPage}>
-                        More {" "}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 15 15"><path fill="currentColor" fillRule="evenodd" d="M7.5 2a.5.5 0 0 1 .5.5v8.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 1 1 .708-.708L7 11.293V2.5a.5.5 0 0 1 .5-.5" clipRule="evenodd"></path></svg>
-                    </Button>
+            {snippets.length === 0 ? (
+                <div className="flex justify-center items-center h-64">
+                    <ClipLoader color="#000" loading={true} size={35} />
                 </div>
+            ) : (
+                <>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>ID</TableHead>
+                                <TableHead>Username</TableHead>
+                                <TableHead>Language</TableHead>
+                                <TableHead>Timestamp</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {snippets.map((item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>
+                                        <Dialog>
+                                            <DialogTrigger className="text-blue-300">{item.id}</DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Submission {item.id}</DialogTitle>
+                                                </DialogHeader>
+                                                <SubmissionDetails {...item}></SubmissionDetails>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </TableCell>
+                                    <TableCell>{item.username}</TableCell>
+                                    <TableCell>{item.language}</TableCell>
+                                    <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    {currentPage <= totalPages && (
+                        <div className="text-center my-4">
+                            <Button variant="outline" onClick={fetchNextPage}>
+                                More {" "}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 15 15"><path fill="currentColor" fillRule="evenodd" d="M7.5 2a.5.5 0 0 1 .5.5v8.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 1 1 .708-.708L7 11.293V2.5a.5.5 0 0 1 .5-.5" clipRule="evenodd"></path></svg>
+                            </Button>
+                        </div>
+                    )}
+                </>
             )}
         </>
     );
