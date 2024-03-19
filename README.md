@@ -7,56 +7,48 @@ The Code Snippets Web Application is a platform designed to facilitate the submi
 - **Submission Form**: Allows users to submit code snippets with username, preferred language, stdin, and source code.
 - **Submission Display**: Displays all submitted entries in a tabular format, showcasing username, language, stdin, and submission timestamp.
 - **Output Retrieval**: Utilizes Judge0 API to retrieve the output of code snippets and display it in the submission table.
-- **Redis Caching**: Implements Redis caching to optimize performance by reducing database read requests.
+- **Redis Caching**: Implements Redis caching to optimize performance by reducing requests to the API for fetching output.
 - **Pagination**: Supports lazy loading pagination to efficiently navigate through submissions.
 
-## Technologies Used
+## Architecture
 
-- **Frontend**: React.js
-- **Backend**: Express.js
-- **Database**: MySQL
-- **Cache**: Redis
-- **External API**: Judge0
+### Backend
+
+- [Node.js](https://nodejs.org/) for the backend
+- [Express.js](https://expressjs.com/) for handling HTTP requests
+- [MySQL](https://www.mysql.com/) for the database
+- [Redis](https://redis.io/) for caching
+- [Judge0](https://www.judge0.com/) for code execution
+
+### Frontend
+
+- [Next.js](https://nextjs.org/) for building the user interface
+- [Tailwind CSS](https://tailwindcss.com/) for styling
 
 ## Installation
 
-1. Clone the repository: `git clone <repository-url>`
-2. Navigate to the project directory: `cd code-snippets-app`
-3. Install dependencies:
-   - Frontend: `cd frontend && npm install`
-   - Backend: `cd backend && npm install`
+1. Clone the repository: `git clone https://github.com/utsav82/tuf-assignment`
+2. Navigate to the project directory: `cd tuf-assignment`
+3. Install dependencies: `npm install`
 4. Set up environment variables:
-   - Create a `.env` file in the `backend` directory.
-   - Define the required environment variables (see `.env.example` for reference).
-5. Start the backend server: `npm start` in the `backend` directory.
-6. Start the frontend server: `npm start` in the `frontend` directory.
-7. Access the application at `http://localhost:3000` in your browser.
+   - Create a `.env` file.
+   - Define the required environment variables (see below for reference).
+5. Start the backend server: `npm start`.
+6. Access the application at `http://localhost:8080` in your browser.
 
 ## Database Schema
 
-### User Table
-
-| Field    | Type         | Description                  |
-|----------|--------------|------------------------------|
-| id       | INT          | Unique identifier            |
-| username | VARCHAR(255) | Username of the user         |
-
 ### Code Snippets Table
 
-| Field       | Type         | Description                                   |
-|-------------|--------------|-----------------------------------------------|
-| id          | INT          | Unique identifier                             |
+| Field       | Type         | Description                                    |
+| ----------- | ------------ | ---------------------------------------------- |
+| id          | INT          | Unique identifier                              |
 | username    | VARCHAR(255) | Username of the user who submitted the snippet |
-| language    | ENUM         | Preferred code language                       |
-| stdin       | TEXT         | Standard input (stdin)                        |
-| source_code | TEXT         | Source code of the snippet                    |
-| timestamp   | TIMESTAMP    | Timestamp of submission                       |
-| output      | TEXT         | Output of the code snippet execution          |
-
-## Bonus Tasks
-
-1. **Redis Caching**: Caches output from the Judge0 API to reduce database read requests and improve performance.
-2. **External API Integration (Judge0)**: Retrieves and displays the output of code snippets, enhancing user experience.
+| language    | ENUM         | Preferred code language                        |
+| stdin       | TEXT         | Standard input (stdin)                         |
+| source_code | TEXT         | Source code of the snippet                     |
+| timestamp   | TIMESTAMP    | Timestamp of submission                        |
+| output      | TEXT         | Output of the code snippet execution           |
 
 ## Environment Variables
 
