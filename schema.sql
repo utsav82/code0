@@ -4,6 +4,6 @@ CREATE TABLE code_snippets (
     language ENUM('C++', 'Java', 'JavaScript', 'Python') NOT NULL,
     source_code TEXT NOT NULL,
     stdin TEXT,
-    output TEXT,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    token VARCHAR(255)
 );

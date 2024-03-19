@@ -23,5 +23,19 @@ process.on("SIGINT", () => {
   console.log("redis client quit");
 });
 
+const outputMiddleware = async (req, res, next) => {
+  const token = req.params.token;
+  try {
+    const output = await client.get(token);
+    if (!!output) {
+      res.status(200).send({ output });
+    } else {
+      next();
+    }
+  } catch (err) {
+    console.log(err);
+    next();
+  }
+};
 
-export { client };
+export { client, outputMiddleware };

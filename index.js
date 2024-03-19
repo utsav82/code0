@@ -2,19 +2,14 @@ import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
+import cors from "cors";
 import codeSnippetController from "./controllers/codeSnippetController.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { outputMiddleware } from "./redis.js";
 
 const app = express();
 
-// // enable cors
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   next();
-// });
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -22,7 +17,11 @@ const PORT = process.env.PORT || 8080;
 app.use(express.static(path.join(__dirname, "./frontend", "out")));
 
 app.get("/api/code-snippets", codeSnippetController.getAllCodeSnippets);
-
+app.get(
+  "/api/code-snippets/:token",
+  outputMiddleware,
+  codeSnippetController.getOutput
+);
 app.post("/api/code-snippets", codeSnippetController.createCodeSnippet);
 
 app.get("/*", (req, res) => {

@@ -1,0 +1,43 @@
+version: "3"
+services:
+  code-server:
+    build: .
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - 8080:8080  
+    environment:
+      - PORT=8080
+      - MYSQL_HOST=localhost
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=test
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: "test"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "root"
+      MYSQL_ROOT_PASSWORD: "root"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+      redis:
+        image: redis:latest
+        restart: always
+        ports:
+          - "6379:6379"
+        volumes:
+          - my-redis:/data
+
+volumes:
+  my-db:
+  my-redis:

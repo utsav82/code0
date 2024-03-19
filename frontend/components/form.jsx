@@ -45,7 +45,7 @@ const Form = () => {
         e.preventDefault();
 
         // Form validation
-        if (!username || !value || !source_code || !stdin) {
+        if (!username || !value || !source_code) {
             toast({
                 title: "Please fill in all fields",
                 description: "All fields are required.",

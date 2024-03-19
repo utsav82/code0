@@ -1,9 +1,34 @@
-import React from 'react';
+"use client";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Check } from "lucide-react";
-const SubmissionDetails = ({ username, language, source_code, stdin, output }) => {
+import ClipLoader from "react-spinners/ClipLoader";
+import { useEffect, useState } from "react";
+const SubmissionDetails = ({ username, language, source_code, stdin, token }) => {
+
+    const [output, setOutput] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetch(`http://localhost:8080/api/code-snippets/${token}`);
+                const data = await response.json();
+                console.log(token);
+                setOutput(data.output);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+
+
     return (
         <div className="container flex flex-col py-6">
             <div className="flex flex-col sm:flex-row gap-6">
@@ -45,15 +70,22 @@ const SubmissionDetails = ({ username, language, source_code, stdin, output }) =
                         readOnly
                     />
 
+
                     <Label htmlFor="output">Ouput</Label>
-                    <Textarea
-                        id="output"
-                        placeholder="Output"
-                        className="flex-1 resize-none"
-                        value={output}
-                        disabled
-                        readOnly
-                    />
+                    {isLoading ? (
+                        <div className="flex-1 flex items-center justify-center">
+                            <ClipLoader />
+                        </div>
+                    ) : (
+                        <Textarea
+                            id="output"
+                            placeholder="Output"
+                            className="flex-1 resize-none"
+                            value={output}
+                            disabled
+                            readOnly
+                        />
+                    )}
 
                 </div>
             </div>
