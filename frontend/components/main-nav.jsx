@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export function MainNav() {
     return (
@@ -12,7 +11,7 @@ export function MainNav() {
                     width={100}
                     height={100}
                 />
-                <span className="font-extrabold sm:text-xl">TUF assignment</span>
+                <span className="font-extrabold sm:text-xl">Code0</span>
             </Link>
             <div className="flex items-center justify-center gap-3">
                 <nav className="flex gap-6">

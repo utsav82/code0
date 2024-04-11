@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import codeSnippetController from "./controllers/codeSnippetController.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-import { outputMiddleware } from "./redis.js";
+import { codeMiddleware } from "./redis.js";
 
 const app = express();
 
@@ -18,9 +18,9 @@ app.use(express.static(path.join(__dirname, "./frontend", "out")));
 
 app.get("/api/code-snippets", codeSnippetController.getAllCodeSnippets);
 app.get(
-  "/api/code-snippets/:token",
-  outputMiddleware,
-  codeSnippetController.getOutput
+  "/api/code-snippets/:id",
+  codeMiddleware,
+  codeSnippetController.getCodeSnippetById
 );
 app.post("/api/code-snippets", codeSnippetController.createCodeSnippet);
 

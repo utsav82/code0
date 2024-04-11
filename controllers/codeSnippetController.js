@@ -45,6 +45,41 @@ async function submitCodeSnippetToJudge0(codeSnippet) {
   }
 }
 
+async function getOutput(token) {
+  try {
+    const options = {
+      method: "GET",
+      url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+      params: {
+        base64_encoded: "true",
+        fields: "*",
+      },
+      headers: {
+        "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+        "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+      },
+    };
+
+    if (token === undefined) {
+      throw "Token Required";
+    }
+
+    const response = await axios.request(options);
+    let output;
+    if (response.status.id <= 2) {
+      output = "processing";
+    } else if (response.data.status.id === 3) {
+      output = Buffer.from(response.data.stdout, "base64").toString("utf-8");
+    } else {
+      output = response.data.status.description;
+    }
+
+    return output;
+  } catch (error) {
+    console.error("Error getting code snippets:", error);
+  }
+}
+
 const codeSnippetController = {
   createCodeSnippet: async (req, res) => {
     const { username, language, source_code, stdin } = req.body;
@@ -56,8 +91,8 @@ const codeSnippetController = {
       });
 
       const result = await db.query(
-        "INSERT INTO code_snippets (username, language, source_code, stdin, token) VALUES (?, ?, ?, ?, ?)",
-        [username, language, source_code, stdin, token]
+        "INSERT INTO code_snippets (username, language, source_code, stdin, token, output) VALUES (?, ?, ?, ?, ?, ?)",
+        [username, language, source_code, stdin, token, "processing"]
       );
 
       const newCodeSnippetId = result.insertId;
@@ -77,7 +112,7 @@ const codeSnippetController = {
 
     try {
       const [codeSnippets] = await db.query(
-        "SELECT id, username, language, source_code, stdin, token, timestamp FROM code_snippets ORDER BY timestamp DESC LIMIT ?, ?",
+        "SELECT id, username, language, timestamp FROM code_snippets ORDER BY timestamp DESC LIMIT ?, ?",
         [offset, parseInt(pageSize)]
       );
       const [totalCount] = await db.query(
@@ -97,40 +132,26 @@ const codeSnippetController = {
     }
   },
 
-  getOutput: async (req, res) => {
-    const { token } = req.params;
-
+  getCodeSnippetById: async (req, res) => {
+    const id = req.params.id;
     try {
-      const options = {
-        method: "GET",
-        url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
-        params: {
-          base64_encoded: "true",
-          fields: "*",
-        },
-        headers: {
-          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
-          "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-        },
-      };
+      let code = await db.query(
+        "SELECT id, username, language, source_code, stdin, token, timestamp, output FROM code_snippets WHERE id = ?",
+        [id]
+      );
 
-      if (token === undefined) {
-        res.status(400).json({ message: "Token is required" });
+      code = code[0][0];
+      // console.log(code);
+
+      if (code.output === "processing") {
+        code.output = await getOutput(code.token);
       }
 
-      const response = await axios.request(options);
-      let output;
-      if (response.data.status.id === 3) {
-        output = Buffer.from(response.data.stdout, "base64").toString("utf-8");
-      } else {
-        output = response.data.status.description;
+      if (code.output !== "processing") {
+        await client.set(id, JSON.stringify(code));
       }
 
-      if (response.data.status.id >= 3) {
-        await client.set(token, output);
-      }
-
-      res.json({ output });
+      res.json(code);
     } catch (error) {
       console.error("Error getting code snippets:", error);
       res.status(500).json({ message: "Internal server error" });

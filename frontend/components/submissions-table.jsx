@@ -19,7 +19,7 @@ const Submissions = () => {
 
     const fetchSnippets = async () => {
         try {
-            const response = await axios.get(`/api/code-snippets?page=${currentPage}`);
+            const response = await axios.get(`http://localhost:8080/api/code-snippets?page=${currentPage}`);
             const { snippets: newSnippets, totalPages, currentPage: newCurrentPage } = response.data;
             setSnippets([...snippets, ...newSnippets]);
             setTotalPages(totalPages);
@@ -66,7 +66,7 @@ const Submissions = () => {
                                                 <DialogHeader>
                                                     <DialogTitle>Submission {item.id}</DialogTitle>
                                                 </DialogHeader>
-                                                <SubmissionDetails {...item}></SubmissionDetails>
+                                                <SubmissionDetails id={item.id}></SubmissionDetails>
                                             </DialogContent>
                                         </Dialog>
                                     </TableCell>
