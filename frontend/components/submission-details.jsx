@@ -14,7 +14,7 @@ const SubmissionDetails = ({ id }) => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`http://localhost:8080/api/code-snippets/${id}`);
+                const response = await fetch(`/api/code-snippets/${id}`);
                 const data = await response.json();
                 console.log(data)
                 setCode(data);

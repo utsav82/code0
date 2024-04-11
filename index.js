@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, "./frontend", "out")));
 app.get("/api/code-snippets", codeSnippetController.getAllCodeSnippets);
 app.get(
   "/api/code-snippets/:id",
-  codeMiddleware,
+  // codeMiddleware,
   codeSnippetController.getCodeSnippetById
 );
 app.post("/api/code-snippets", codeSnippetController.createCodeSnippet);

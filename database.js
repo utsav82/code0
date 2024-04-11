@@ -18,5 +18,6 @@ db.getConnection()
     console.error("Error connecting to database:", err);
   });
 
+// db.query("truncate code_snippets")
 
 export default db;

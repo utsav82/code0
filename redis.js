@@ -34,4 +34,6 @@ const codeMiddleware = async (req, res, next) => {
   }
 };
 
+// client.flushAll()
+
 export { client, codeMiddleware };

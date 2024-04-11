@@ -143,7 +143,7 @@ const codeSnippetController = {
       code = code[0][0];
       // console.log(code);
 
-      if (code.output === "processing") {
+      if (!code.output || code.output === "processing") {
         code.output = await getOutput(code.token);
       }
 
