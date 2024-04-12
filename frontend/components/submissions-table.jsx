@@ -21,9 +21,9 @@ const Submissions = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const fetchSnippets = async (page = 1, resetSnippets = false) => {
+    const fetchSnippets = async (page = 1, resetSnippets = false, loading = true) => {
         try {
-            setIsLoading(true);
+            setIsLoading(loading);
             const response = await axios.get(`/api/code-snippets?page=${page}&username=${username}`);
             const { snippets: newSnippets, totalPages, currentPage: newCurrentPage } = response.data;
             console.log(response);
@@ -46,7 +46,7 @@ const Submissions = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        fetchSnippets(1,true);
+        fetchSnippets(1, true);
     }
 
 
@@ -58,7 +58,7 @@ const Submissions = () => {
 
     const fetchNextPage = () => {
         if (currentPage <= totalPages) {
-            fetchSnippets(currentPage, false);
+            fetchSnippets(currentPage, false, false);
         }
     };
 
