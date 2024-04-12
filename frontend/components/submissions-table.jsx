@@ -24,7 +24,7 @@ const Submissions = () => {
     const fetchSnippets = async (page = 1, resetSnippets = false) => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://localhost:8080/api/code-snippets?page=${page}&username=${username}`);
+            const response = await axios.get(`/api/code-snippets?page=${page}&username=${username}`);
             const { snippets: newSnippets, totalPages, currentPage: newCurrentPage } = response.data;
             console.log(response);
 
