@@ -107,17 +107,44 @@ const codeSnippetController = {
   },
 
   getAllCodeSnippets: async (req, res) => {
-    const { page = 1, pageSize = 10 } = req.query;
+    const { page = 1, pageSize = 10, username } = req.query;
     const offset = (page - 1) * pageSize;
 
     try {
-      const [codeSnippets] = await db.query(
-        "SELECT id, username, language, timestamp FROM code_snippets ORDER BY timestamp DESC LIMIT ?, ?",
-        [offset, parseInt(pageSize)]
-      );
+      
+      const hasUsernameFilter =
+        username !== null &&
+        username !== undefined &&
+        username !== "" &&
+        username !== "undefined";
+
+      let mainQuery =
+        "SELECT id, username, language, timestamp FROM code_snippets";
+      const mainQueryParams = [];
+
+      if (hasUsernameFilter) {
+        mainQuery += " WHERE username = ?";
+        mainQueryParams.push(username);
+      }
+
+      mainQuery += " ORDER BY timestamp DESC LIMIT ?, ?";
+      mainQueryParams.push(offset, parseInt(pageSize));
+
+      const [codeSnippets] = await db.query(mainQuery, mainQueryParams);
+
+      let totalCountQuery = "SELECT COUNT(*) AS totalCount FROM code_snippets";
+      const totalCountQueryParams = [];
+
+      if (hasUsernameFilter) {
+        totalCountQuery += " WHERE username = ?";
+        totalCountQueryParams.push(username);
+      }
+
       const [totalCount] = await db.query(
-        "SELECT COUNT(*) AS totalCount FROM code_snippets"
+        totalCountQuery,
+        totalCountQueryParams
       );
+
       const totalItems = totalCount[0].totalCount;
       const totalPages = Math.ceil(totalItems / pageSize);
 
@@ -131,7 +158,6 @@ const codeSnippetController = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
-
   getCodeSnippetById: async (req, res) => {
     const id = req.params.id;
     try {

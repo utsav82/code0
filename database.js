@@ -19,5 +19,6 @@ db.getConnection()
   });
 
 // db.query("truncate code_snippets")
+// db.query("DELETE FROM code_snippets WHERE id = 9 ")
 
 export default db;

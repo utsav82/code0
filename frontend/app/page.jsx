@@ -15,7 +15,7 @@ const page = () => {
              Click each entry ID to view its submission 
           </p>
         </div>
-        <Separator />
+      
         <Submissions />
       </div>
     </>
