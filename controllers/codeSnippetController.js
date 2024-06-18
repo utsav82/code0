@@ -65,13 +65,19 @@ async function getOutput(token) {
     }
 
     const response = await axios.request(options);
+    const statusId = response.data.status.id;
     let output;
-    if (response.status.id <= 2) {
-      output = "processing";
-    } else if (response.data.status.id === 3) {
+
+    if (statusId <= 2) {
+      output = "Processing";
+    } else if (statusId === 3) {
       output = Buffer.from(response.data.stdout, "base64").toString("utf-8");
+    } else if (statusId === 6) {
+      output = Buffer.from(response.data.compile_output, "base64").toString(
+        "utf-8"
+      );
     } else {
-      output = response.data.status.description;
+      output = Buffer.from(response.data.stderr, "base64").toString("utf-8");
     }
 
     return output;
@@ -111,7 +117,6 @@ const codeSnippetController = {
     const offset = (page - 1) * pageSize;
 
     try {
-      
       const hasUsernameFilter =
         username !== null &&
         username !== undefined &&
@@ -167,7 +172,7 @@ const codeSnippetController = {
       );
 
       code = code[0][0];
-      // console.log(code);
+      console.log(code);
 
       if (!code.output || code.output === "processing") {
         code.output = await getOutput(code.token);
@@ -175,6 +180,10 @@ const codeSnippetController = {
 
       if (code.output !== "processing") {
         await client.set(id, JSON.stringify(code));
+        await db.query("UPDATE code_snippets SET output = ? WHERE id = ?", [
+          code.output,
+          id,
+        ]);
       }
 
       res.json(code);
